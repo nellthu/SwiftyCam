@@ -487,13 +487,6 @@ open class SwiftyCamViewController: UIViewController {
 
 				// Update the orientation on the movie file output video connection before starting recording.
 				let movieFileOutputConnection = self.movieFileOutput?.connection(withMediaType: AVMediaTypeVideo)
-
-
-				//flip video output if front facing camera is selected
-				if self.currentCamera == .front {
-					movieFileOutputConnection?.isVideoMirrored = true
-				}
-
 				movieFileOutputConnection?.videoOrientation = self.getVideoOrientation()
 
 				// Start recording to a temporary file.
