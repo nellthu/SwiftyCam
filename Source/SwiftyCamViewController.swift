@@ -388,8 +388,10 @@ open class SwiftyCamViewController: UIViewController {
 				self.isSessionRunning = self.session.isRunning
                 
                 // Update Preview layer bounds & video orientation - can be done only after the connection is created
-                DispatchQueue.main.async {
-                    self.updatePreviewLayer(layer: self.previewLayer.videoPreviewLayer.connection, orientation: self.orientation.getPreviewLayerOrientation())
+                if let connection = self.previewLayer.videoPreviewLayer.connection {
+                    DispatchQueue.main.async {
+                        self.updatePreviewLayer(layer: connection, orientation: self.orientation.getPreviewLayerOrientation())
+                    }
                 }
 
 			case .notAuthorized:
