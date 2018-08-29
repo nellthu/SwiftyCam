@@ -268,6 +268,7 @@ open class SwiftyCamViewController: UIViewController {
 	override open func viewDidLoad() {
 		super.viewDidLoad()
         previewLayer = PreviewView(frame: view.frame, videoGravity: videoGravity)
+        previewLayer.center = view.center
         view.addSubview(previewLayer)
         view.sendSubview(toBack: previewLayer)
 
@@ -385,10 +386,10 @@ open class SwiftyCamViewController: UIViewController {
 				// Begin Session
 				self.session.startRunning()
 				self.isSessionRunning = self.session.isRunning
-
-                // Preview layer video orientation can be set only after the connection is created
+                
+                // Update Preview layer bounds & video orientation - can be done only after the connection is created
                 DispatchQueue.main.async {
-                    self.previewLayer.videoPreviewLayer.connection?.videoOrientation = self.orientation.getPreviewLayerOrientation()
+                    self.updatePreviewLayer(layer: self.previewLayer.videoPreviewLayer.connection, orientation: self.orientation.getPreviewLayerOrientation())
                 }
 
 			case .notAuthorized:
@@ -518,14 +519,7 @@ open class SwiftyCamViewController: UIViewController {
 				}
 
 				// Update the orientation on the movie file output video connection before starting recording.
-				let movieFileOutputConnection = self.movieFileOutput?.connection(with: AVMediaType.video)
-
-
-				//flip video output if front facing camera is selected
-				if self.currentCamera == .front {
-					movieFileOutputConnection?.isVideoMirrored = true
-				}
-
+                let movieFileOutputConnection = self.movieFileOutput?.connection(with: AVMediaType.video)
 				movieFileOutputConnection?.videoOrientation = self.orientation.getVideoOrientation() ?? previewOrientation
 
 				// Start recording to a temporary file.
